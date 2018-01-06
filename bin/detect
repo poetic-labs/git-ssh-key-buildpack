@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+echo "Git SSH key"
+exit 0
