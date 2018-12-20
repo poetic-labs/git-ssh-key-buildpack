@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 ENV_DIR=${3:-}
+BUILD_DIR=$1
 
 git_ssh_key="$(cat $ENV_DIR/GIT_SSH_KEY)"
 git_ssh_host="$(cat $ENV_DIR/GIT_SSH_HOST)"
@@ -10,16 +11,16 @@ if [ "$git_ssh_key" != "" ] && [ "$git_ssh_host" != "" ]; then
   echo "" >&1
 
   # Ensure that we have the SSH directory
-  if [ ! -d ~/.ssh ]; then
-    mkdir -p ~/.ssh
-    chmod 700 ~/.ssh
+  if [ ! -d $BUILD_DIR/.ssh ]; then
+    mkdir -p $BUILD_DIR/.ssh
+    chmod 700 $BUILD_DIR/.ssh
   fi
 
   # Load the git SSH key into a file
-  echo $git_ssh_key | base64 --decode > ~/.ssh/git_key
+  echo $git_ssh_key | base64 --decode > $BUILD_DIR/.ssh/git_key
 
   # Change the permissions on the file to be read-write for this user
-  chmod 600 ~/.ssh/git_key
+  chmod 600 $BUILD_DIR/.ssh/git_key
 
   # Set up the SSH config file
   echo -e "Host $git_ssh_host\n"\
@@ -27,5 +28,5 @@ if [ "$git_ssh_key" != "" ] && [ "$git_ssh_host" != "" ]; then
           " IdentitiesOnly yes\n"\
           " UserKnownHostsFile=/dev/null\n"\
           " StrictHostKeyChecking no"\
-          > ~/.ssh/config
+          > $BUILD_DIR/.ssh/config
 fi
